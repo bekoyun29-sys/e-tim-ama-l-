@@ -1,0 +1,90 @@
+#include <windows.h>
+#include <vector>
+#include <iostream>
+
+// ============================================================
+// E61GT PROJESİ - NİHAİ ANA İSKELET
+// Kanka; listedeki tüm özellikleri (Aimbot, ESP, Blink, Clicker)
+// bu motorun içine yerleştirmen için bölümleri ayırdım.
+// ============================================================
+
+struct CheatSettings {
+    // Combat
+    bool aimbot = false;
+    bool leftClicker = false;
+    bool rightClicker = false;
+    bool autoRod = false;
+
+    // Render (ESP & Visuals)
+    bool playerESP = true;
+    bool chestESP = false;
+    bool chams = false;
+    bool chinaHat = false;
+    bool tracers = false;
+    float itemAnimation = 1.0f;
+
+    // Misc & Global
+    bool blink = false;
+    bool antiBot = true;
+    bool showHUD = true;
+};
+
+CheatSettings settings;
+
+// --- SAVAŞ MOTORU (Combat) ---
+void CombatEngine() {
+    if (settings.leftClicker) {
+        // Sol tık makro kodları (12-18 CPS) buraya gelecek
+    }
+    if (settings.aimbot) {
+        // En yakın oyuncuya kilitlenme algoritması buraya
+    }
+}
+
+// --- GÖRSEL MOTOR (Render) ---
+void RenderEngine() {
+    if (settings.playerESP) {
+        // Oyuncu kutuları (Box), Nametags ve Tracers çizimleri
+    }
+    if (settings.chams) {
+        // Wallhack / Renkli oyuncu çizimi (X-Ray)
+    }
+}
+
+// --- ÖZEL MODLAR (Misc) ---
+void MiscEngine() {
+    if (settings.blink) {
+        // Paket durdurma (Inbound/Outbound) kodları
+    }
+}
+
+// --- ANA DÖNGÜ ---
+DWORD WINAPI E61GT_Main(LPVOID lpParam) {
+    Beep(1000, 500); // Sızma Başarılı!
+
+    while (true) {
+        // Menü Tuşu (INSERT)
+        if (GetAsyncKeyState(VK_INSERT) & 1) settings.showHUD = !settings.showHUD;
+
+        // İMHA TUŞU (DELETE) - Kanıt bırakmadan hileyi kapatır
+        if (GetAsyncKeyState(VK_DELETE) & 1) break;
+
+        CombatEngine();
+        RenderEngine();
+        MiscEngine();
+
+        Sleep(1); // CPU optimizasyonu
+    }
+
+    FreeLibraryAndExitThread((HMODULE)lpParam, 0);
+    return 0;
+}
+
+// --- SIZMA GİRİŞİ (DLL Entry) ---
+BOOL WINAPI DllMain(HMODULE hMod, DWORD sebep, LPVOID res) {
+    if (sebep == DLL_PROCESS_ATTACH) {
+        DisableThreadLibraryCalls(hMod);
+        CreateThread(0, 0, (LPTHREAD_START_ROUTINE)E61GT_Main, hMod, 0, 0);
+    }
+    return TRUE;
+}
