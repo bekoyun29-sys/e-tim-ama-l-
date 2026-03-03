@@ -1,0 +1,56 @@
+import os
+import warnings
+from ddgs import DDGS
+
+# Gereksiz sistem kayıtlarını ve uyarıları kapat
+warnings.filterwarnings("ignore")
+
+class E61GT_Profesyonel:
+    def __init__(self):
+        self.isim = "E61GT"
+        self.kullanici = "Efendim"
+
+    def konus(self, mesaj):
+        print(f"\n[{self.isim}]: {mesaj}")
+
+    def teknik_arastirma(self, sorgu):
+        """Sadece genel ve teknik bilgileri araştırır."""
+        # Gizlilik Filtresi: Kişisel veri içeren kelimeleri anında engeller
+        yasakli = ["telefon", "numara", "adres", "sızıntı", "panel", "sorgu", "kimlik"]
+        if any(kelime in sorgu.lower() for kelime in yasakli):
+            return "Üzgünüm, yasal çerçeve ve gizlilik politikam gereği bu tür verilere erişim sağlayamam."
+
+        try:
+            with DDGS() as ddgs:
+                results = list(ddgs.text(sorgu, max_results=3))
+                if results:
+                    return "\n".join([f"> {r['body']}" for r in results])
+                return "Aradığınız teknik konuda açık kaynak verisi bulunamadı."
+        except:
+            return "Küresel ağlara şu an erişilemiyor, lütfen daha sonra tekrar deneyin."
+
+    def baslat(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print("==========================================")
+        print(f"    {self.isim} YASAL GELİŞTİRİCİ MODU")
+        print("==========================================")
+        print(">> Gizlilik ve yasal sınırlar korunmaktadır.")
+
+        while True:
+            istek = input(f"\nSiz > ").strip()
+            
+            if not istek: continue
+            if istek.lower() in ["kapat", "çıkış", "dur"]:
+                self.konus("Sistem güvenli bir şekilde kapatıldı. İyi çalışmalar!")
+                break
+
+            # Teknik analiz başlat
+            if "kod" in istek.lower() or "nasıl yapılır" in istek.lower():
+                self.konus("İstediğiniz teknik yapıyı ve mantığı hazırlıyorum...")
+                # Buraya sadece yasal ve teknik rehberler eklenebilir
+            
+            cevap = self.teknik_arastirma(istek)
+            self.konus(cevap)
+
+if __name__ == "__main__":
+    E61GT_Profesyonel().baslat()
